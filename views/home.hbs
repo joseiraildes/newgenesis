@@ -6,5 +6,11 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io();
-  console.log("Socket connected:", socket.id); // Replace with your own logicol
+  socket.on("connected", (message) => {
+    console.log("Socket connected:", socket.id); // Replace with your own logic
+    // console.log(message.message)
+    // Additional logic can be added here
+    // For example, you can emit an event to the server or listen for events
+  });
+  // console.log("Socket connected:", socket.id); // Replace with your own logicol
 </script>
