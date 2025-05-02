@@ -4,6 +4,8 @@ const { Server } = require("socket.io")
 // const { app, server } = require("./config/config.js")
 const hbs = require("express-handlebars")
 const path = require("path")
+const IpQuery = require("./ip/api.js")
+const User = require("./models/User.js")
 
 const app = express()
 const server = createServer(app)
@@ -17,9 +19,33 @@ app.engine("hbs", hbs.engine({
 app.set("view engine", "hbs")
 app.set("views", path.join(__dirname, "views"))
 app.use(express.static(path.join(__dirname, "public")))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 
-app.get("/", (req, res) => {
-  res.render("home")
+app.get("/", async(req, res) => {
+  const ip = await IpQuery()
+  console.log("IP =>", ip)
+  
+  const user = await User.findOne({
+    where: {
+      ip: ip
+    }
+  })
+
+  // console.log(user)
+
+  if (!user ||user === null) {
+    console.log("User not found")
+    // res.json({
+    //   message: "User not found",
+    //   ip: ip
+    // })
+    res.redirect("/login")
+  } else {
+    res.render("home")
+    console.log("User found =>", user.dataValues)
+  }
+  
 })
 
 app.get("/socket", (req, res) => {
@@ -28,13 +54,14 @@ app.get("/socket", (req, res) => {
 // socket.io connection
 io.on("connection", (socket) => {
   console.log("New client connected =>", socket.id)
+  socket.emit("connected", { message: "Hello, people." })
   socket.on("disconnect", () => {
     console.log("Client disconnected =>", socket.id)
   })
 })
 
 
-server.listen(3000, (err)=>{
-    if (err) console.log(err)
-    console.log("Server is running on port 3000")
+server.listen(3001, (err)=>{
+  if (err) console.log(err)
+  console.log("Server is running on port 3001")
 })
