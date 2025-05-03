@@ -47,9 +47,42 @@ app.get("/", async(req, res) => {
   }
   
 })
+app.get("/login", async(req, res)=>{
+  // verification and redirect for page
+  const ip = await IpQuery()
+  // console.log("IP =>", ip)
 
-app.get("/socket", (req, res) => {
-  res.send("Socket route")
+  const user = await User.findOne({
+    where: {
+      ip: ip
+    }
+  })
+
+  if (!user || user === null) {
+    console.log("User not found")
+    res.render("login")
+  } else {
+    res.redirect("/")
+    console.log("User found =>", user.dataValues)
+  }
+})
+app.get("/register", async(req, res)=>{
+  // register
+  const ip = await IpQuery()
+
+  const user = await User.findOne({
+    where: {
+      ip: ip
+    }
+  })
+
+  if(!user || user === null){
+    console.log("User not found")
+    res.render("register")
+  }else{
+    res.redirect("/login")
+    console.log("User found =>", user.dataValues)
+  }
 })
 // socket.io connection
 io.on("connection", (socket) => {
