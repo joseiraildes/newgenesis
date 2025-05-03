@@ -1,0 +1,58 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header text-center bg-light">
+          <h3>Registrar</h3>
+        </div>
+        <div class="card-body">
+          <form method="POST" action="/register">
+            <div class="mb-3">
+              <label for="username" class="form-label">Usuário <strong class="text-danger">*</strong></label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Digite seu usuário" required />
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Senha <strong class="text-danger">*</strong></label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Digite sua senha" required />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email <strong class="text-danger">*</strong></label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu email" required />
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="terms" name="terms" required />
+              <label class="form-check-label" for="terms">
+                Aceito os <a href="/termos-de-uso" target="_blank">termos de uso</a>
+              </label>
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="privacy" name="privacy" required />
+              <label class="form-check-label" for="privacy">
+                Aceito a <a href="/politica-de-privacidade" target="_blank">política de privacidade</a>
+              </label>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Registrar</button>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer text-center">
+          <small>Já tem uma conta? <a href="/login">Faça login</a></small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{!-- Add JavaScript to handle form submission and validation --}}
+<script>
+  
+  document.querySelector('form').addEventListener('submit', function(event) {
+    const termsChecked = document.getElementById('terms').checked;
+    const privacyChecked = document.getElementById('privacy').checked;
+    
+    if (!termsChecked || !privacyChecked) {
+      event.preventDefault();
+      alert('Você deve aceitar os termos de uso e a política de privacidade.');
+    }
+  });
+</script>
