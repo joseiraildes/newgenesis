@@ -22,20 +22,20 @@
               <a class="nav-link active" aria-current="page" href="/">Início</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Publicar</a>
+              <a class="nav-link" href="/publicar">Publicar</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Perfil</a>
-            </li>
+            {{!-- <li class="nav-item">
+              <a class="nav-link" href="/perfil">Perfil</a>
+            </li> --}}
             <li class="nav-item"></li>
-              <a class="nav-link" href="#">Github</a>
+              <a class="nav-link" href="https://github.com/joseiraildes/newgenesis">Github</a>
             </li>
           </ul>
         </div>
         <div class="text-end">
-          {{#if @user}}
+          {{#if user}}
             {{!-- user button --}}
-            <a class="text-lg" href="/@{{@user.username}}">{{@user.username}}</a>
+            <a class="btn btn-sm btn-outline-dark" href="/@{{user.username}}">{{user.username}}</a>
           {{else}}
             <a class="btn btn-outline-dark btn-sm" href="/login">Login</a>
           {{/if}}
