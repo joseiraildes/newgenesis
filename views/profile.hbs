@@ -1,1 +1,42 @@
-{{{btn}}}
+{{#each profile}}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card mt-4 md-4">
+          <div class="card-header">
+            <h4 class="text-center">Perfil de Usuário</h4>
+          </div>
+          <div class="card-body">
+            <div class="card-img">
+              <img src="{{image}}" alt="Profile Picture" class="img-fluid rounded-circle mx-auto d-block" style="width: 150px; height: 150px;">
+            </div>
+            <div class="container">
+              <hr>
+            </div>
+            <div class="card-text mt-3">
+              <p><strong>Nome de usuário</strong></p>
+              <p class="form-control">{{username}}</p>
+              <p><strong>Conta criada em</strong></p>
+              <p class="form-control">{{data}}</p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mt-4 md-4">
+          <div class="card-header">
+            <h4 class="text-center">Sobre mim</h4>
+          </div>
+          <div class="card-body">
+            <p>{{{bio}}}</p>
+          </div>
+{{/each}}
+          <div class="card-footer text-center">
+            {{{btn}}}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
