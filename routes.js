@@ -7,6 +7,7 @@ const path = require("path")
 const IpQuery = require("./ip/api.js")
 const User = require("./models/User.js")
 const Datetime = require("./moment/config.js")
+const Mysql = require("./mysql/config.js")
 
 const app = express()
 const server = createServer(app)
@@ -20,6 +21,7 @@ app.engine("hbs", hbs.engine({
 app.set("view engine", "hbs")
 app.set("views", path.join(__dirname, "views"))
 app.use(express.static(path.join(__dirname, "public")))
+app.use(express.static(path.join(__dirname, "upload")))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
@@ -179,6 +181,7 @@ app.get("/@:username", async(req, res)=>{
   // profile page
   const ip = await IpQuery()
   const { username } = req.params
+  const mysql = await Mysql()
 
   console.log("IP =>", ip)
   console.log("Username =>", username)
@@ -194,7 +197,7 @@ app.get("/@:username", async(req, res)=>{
     console.log("User not found")
     res.redirect("/login")
   } else {
-    let profile = await User.findOne({
+    let profileCheck = await User.findOne({
       where: {
         username: username
       }
@@ -203,10 +206,12 @@ app.get("/@:username", async(req, res)=>{
     const editProfile = `
       <button class="btn btn-primary btn-sm" onclick="location.href='/edit-profile/'">Editar Perfil</button>
     `
-    if (profile.ip === ip) {
-      res.render("profile", { user: profile, btn: editProfile, user: user.dataValues })
+    const profile = await mysql.query(`SELECT * FROM Users WHERE username = "${username}"`)
+    console.log(profile)
+    if (profileCheck.ip === ip) {
+      res.render("profile", { profile: profile[0], btn: editProfile, user: user.dataValues })
     } else {
-      res.render("profile", { user: profile, user: user.dataValues })
+      res.render("profile", { profile: profile[0], user: user.dataValues })
     }
   }
 })
