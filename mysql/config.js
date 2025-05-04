@@ -1,15 +1,16 @@
 const mysql = require('mysql2');
 require("dotenv").config()
-const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env
+const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_URI } = process.env
 
 async function Mysql(){
   const connection = await mysql.createPool({
-    host: DB_HOST,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_NAME
+    uri: DB_URI,
+    // host: DB_HOST,
+    // user: DB_USER,
+    // password: DB_PASSWORD,
+    // database: DB_NAME
   });
-  const pool = connection.promise();
+  const pool = await connection.promise()
   return pool;
 }
 
