@@ -175,6 +175,42 @@ app.post("/register", async(req, res)=>{
   }
 })
 
+app.get("/@:username", async(req, res)=>{
+  // profile page
+  const ip = await IpQuery()
+  const { username } = req.params
+
+  console.log("IP =>", ip)
+  console.log("Username =>", username)
+
+  const user = await User.findOne({
+    where: {
+      ip: ip
+    }
+  })
+
+  
+  if (!user || user === null) {
+    console.log("User not found")
+    res.redirect("/login")
+  } else {
+    let profile = await User.findOne({
+      where: {
+        username: username
+      }
+    })
+    //edit profile button
+    const editProfile = `
+      <button class="btn btn-primary btn-sm" onclick="location.href='/edit-profile/'">Editar Perfil</button>
+    `
+    if (profile.ip === ip) {
+      res.render("profile", { user: profile, btn: editProfile, user: user.dataValues })
+    } else {
+      res.render("profile", { user: profile, user: user.dataValues })
+    }
+  }
+})
+
 // socket.io connection
 io.on("connection", (socket) => {
   console.log("New client connected =>", socket.id)
