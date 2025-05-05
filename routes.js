@@ -8,6 +8,9 @@ const IpQuery = require("./ip/api.js")
 const User = require("./models/User.js")
 const Datetime = require("./moment/config.js")
 const Mysql = require("./mysql/config.js")
+const upload = require("./upload/config.js")
+const Post = require("./models/Post.js")
+const { marked } = require("marked")
 
 const app = express()
 const server = createServer(app)
@@ -215,7 +218,90 @@ app.get("/@:username", async(req, res)=>{
     }
   }
 })
+app.get("/publicar", async(req, res)=>{
+  // publish page
+  const ip = await IpQuery()
+  const user = await User.findOne({
+    where: {
+      ip: ip
+    }
+  })
+  if (!user || user === null) {
+    console.log("User not found")
+    res.redirect("/login")
+  } else {
+    res.render("publicar", { user: user.dataValues })
+  }
+})
+app.post("/publicar", upload.single("image"), async(req, res)=>{
+  // publish post
+  const ip = await IpQuery()
+  const { title, content } = req.body
+  const user = await User.findOne({
+    where: {
+      ip: ip
+    }
+  })
+  if (!user || user === null) {
+    console.log("User not found")
+    res.redirect("/login")
+  } else {
+    console.log("IP =>", ip)
+    console.log("Title =>", title)
+    console.log("Content =>", content)
+    const mysql = await Mysql()
+    const post = await Post.create({
+      title: title,
+      content: marked(content),
+      image: req.file.filename,
+      data: Datetime(),
+      post_like: 0,
+      username: user.username
+    })
+    console.log("Post created =>", post)
+    io.emit("newPost", post);
+    res.redirect(`/@${post.username}/posts/${post.id}`)
+  }
 
+})
+app.get("/@:username/posts/:id", async(req, res)=>{
+  // post page
+  const ip = await IpQuery()
+  const { username, id } = req.params
+  const mysql = await Mysql()
+
+  console.log("IP =>", ip)
+  console.log("Username =>", username)
+  console.log("Post ID =>", id)
+
+  const user = await User.findOne({
+    where: {
+      ip: ip
+    }
+  })
+  
+  if (!user || user === null) {
+    console.log("User not found")
+    res.redirect("/login")
+  } else {
+    let profileCheck = await User.findOne({
+      where: {
+        username: username
+      }
+    })
+    //edit post button
+    const editPost = `
+      <button class="btn btn-secondary" onclick="location.href='/edit-post/${id}'">Editar Post</button>
+    `
+    const post = await mysql.query(`SELECT * FROM Posts WHERE id = "${id}"`)
+    console.log(post[0])
+    if (profileCheck.ip === ip) {
+      res.render("post", { post: post[0], btn: editPost, user: user.dataValues })
+    } else {
+      res.render("post", { post: post[0], user: user.dataValues })
+    }
+  }
+})
 // socket.io connection
 io.on("connection", (socket) => {
   console.log("New client connected =>", socket.id)
