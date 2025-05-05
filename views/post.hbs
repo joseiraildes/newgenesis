@@ -1,0 +1,25 @@
+<div class="container">
+  {{#each post}}
+    <div class="card mt-5 mb-3 shadow-lg">
+      <div class="card-header d-flex justify-content-between">
+        <a href="/@{{username}}">{{username}}</a>
+        <span>{{post_like}}</span>
+      </div>
+      <div class="card-body">
+        <strong class="text-muted">{{data}}</strong>
+        <h2>{{title}}</h2>
+        {{#if image}}
+          <img src="/images/{{image}}" alt="Post Image" class="img-fluid" style="max-width: 100%; height: auto;">
+        {{/if}}
+        <p class="card-text">{{{content}}}</p>
+      </div>
+  {{/each}}
+      <div class="card-footer">
+        <div class="d-flex justify-content-around">
+          <button class="btn btn-outline-primary">Responder</button>
+          {{{btn}}}
+          <button class="btn btn-outline-primary" onclick="likePost({{id}})">Curtir</button>
+        </div>
+      </div>
+    </div>
+</div>
