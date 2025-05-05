@@ -1,0 +1,42 @@
+<div class="container mt-3">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header text-center bg-light">
+          <h4>Publicar Novo Conteúdo</h4>
+        </div>
+        <div class="card-body">
+          <form action="/publicar" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="titulo" class="form-label">Título <strong class="text-danger">*</strong></label>
+              <input type="text" class="form-control" id="titulo" name="title" placeholder="Digite o título do artigo" required>
+            </div>
+            <div class="mb-3">
+              <label for="conteudo" class="form-label">Conteúdo <strong class="text-danger">*</strong></label>
+              <textarea class="form-control" id="conteudo" name="content" rows="6" placeholder="Escreva o conteúdo do artigo" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="imagem" class="form-label">Imagem</label>
+              <input type="file" class="form-control" id="imagem" name="image" required>
+            </div>
+            <div class="form-text">
+              <small class="text">Campos marcados com asterisco(<strong class="text-danger">*</strong>) são obrigatórios.</small>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Publicar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  socket.on('newPost', function(data) {
+    alert('Novo post publicado: ' + data.title);
+  });
+</script>
