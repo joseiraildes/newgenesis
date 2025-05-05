@@ -1,0 +1,11 @@
+.profile-picture{
+  animation: upDown 2s linear infinite alternate;
+}
+@keyframes upDown{
+  0%{
+    transform: translateY(0);
+  }
+  100%{
+    transform: translateY(-10px);
+  }
+}
