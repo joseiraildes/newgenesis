@@ -1,8 +1,19 @@
 {{#each profile}}
   <div class="container">
+    <ul class="nav nav-tabs justify-content-between mt-2">
+      <li class="nav-item">
+        <a class="nav-link active" href="/@{{username}}">Perfil</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/@{{username}}/posts">Posts</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/@{{username}}/comments">Comentários</a>
+      </li>
+    </ul>
     <div class="row">
       <div class="col">
-        <div class="card mt-4 md-4">
+        <div class="card mt-3 md-4">
           <div class="card-header">
             <h4 class="text-center">Perfil de Usuário</h4>
           </div>
